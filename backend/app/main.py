@@ -13,7 +13,7 @@ app.add_middleware(
         settings.FRONTEND_URL,
         "http://localhost:5173",
         "http://127.0.0.1:5173",
-        "https://thunderous-dasik-8f57c9.netlify.app/",
+        "https://thunderous-dasik-8f57c9.netlify.app",
         "https://*.netlify.app"
     ],
     allow_credentials=True,

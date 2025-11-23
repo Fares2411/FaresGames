@@ -1,13 +1,8 @@
 import axios from 'axios';
-
-const getApiBaseUrl = () => {
-  if (process.env.NODE_ENV === 'production') {
-    return process.env.REACT_APP_API_URL || 'https://YOUR-BACKEND-NAME.onrender.com/api';
-  }
-  return 'http://localhost:8000/api';
-};
-
-const API_BASE_URL = getApiBaseUrl();
+const API_BASE_URL = process.env.REACT_APP_API_URL || 
+  (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:8000/api'
+    : 'https://faresgames.onrender.com/api'); 
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -15,6 +10,7 @@ const api = axios.create({
     'Content-Type': 'application/json',
   },
 });
+
 
 export const registerUser = async (userData) => {
   const response = await api.post('/users/register', userData);
