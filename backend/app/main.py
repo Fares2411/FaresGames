@@ -10,11 +10,14 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        settings.FRONTEND_URL,
+        # Local development
         "http://localhost:5173",
         "http://127.0.0.1:5173",
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        # Deployed (Netlify)
         "https://thunderous-dasik-8f57c9.netlify.app",
-        "https://*.netlify.app"
+        "https://*.netlify.app",
     ],
     allow_credentials=True,
     allow_methods=["*"],

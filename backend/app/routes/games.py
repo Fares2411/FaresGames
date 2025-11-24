@@ -4,10 +4,10 @@ from app.database import execute_query
 router = APIRouter()
 @router.get("/")
 def get_all_games(
-    limit: int = Query(100, ge=1, le=500)
+    limit: int = Query(252, ge=1, le=500)
 ):
     """
-    Get all games with pagination
+    Get all games
     SQL: SELECT * FROM Game LIMIT %s 
     """
     query = """
@@ -213,13 +213,11 @@ def get_game_platforms(game_id: int):
         ORDER BY PlatformName
     """
     platforms = execute_query(query, (game_id,))
-    
     if not platforms:
         raise HTTPException(
             status_code=404, 
             detail="No platforms found for this game"
         )
-    
     return {
         "game_id": game_id,
         "platforms": [p['PlatformName'] for p in platforms],

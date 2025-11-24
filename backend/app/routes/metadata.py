@@ -95,7 +95,6 @@ def get_all_games_list():
         SELECT GameID, Title
         FROM Game
         ORDER BY Title
-        LIMIT 1000
     """
     games = execute_query(query)
     return {

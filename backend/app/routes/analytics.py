@@ -113,7 +113,7 @@ def get_top_developers(
     """
     if genre:
         query = """
-            SELECT
+            SELECT DISTINCT
                 c.CompanyName,
                 c.Country,
                 SUM(g.overallCriticsScore*g.overallCriticsCount)/SUM(g.overallCriticsCount) AS AvgCriticsScore,
@@ -132,7 +132,7 @@ def get_top_developers(
         params = (genre, limit)
     else:
         query = """
-            SELECT
+            SELECT DISTINCT
                 c.CompanyName,
                 c.Country,
                 SUM(g.overallCriticsScore*g.overallCriticsCount)/SUM(g.overallCriticsCount) AS AvgCriticsScore,

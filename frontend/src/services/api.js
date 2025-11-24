@@ -1,8 +1,12 @@
 import axios from 'axios';
-const API_BASE_URL = process.env.REACT_APP_API_URL || 
-  (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-    ? 'http://localhost:8000/api'
-    : 'https://faresgames.onrender.com/api'); 
+const getApiBaseUrl = () => {
+  const isDevelopment = 
+    window.location.hostname === 'localhost' || 
+    window.location.hostname === '127.0.0.1';
+  if (isDevelopment) return 'http://localhost:8000/api';
+  return import.meta.env.VITE_API_URL || 'https://faresgames.onrender.com/api';
+};
+const API_BASE_URL = getApiBaseUrl();
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
@@ -23,7 +27,7 @@ export const verifyPassword = async (email, password) => {
   });
   return response.data;
 };
-export const getAllGames = async (limit = 100, offset = 0) => {
+export const getAllGames = async (limit = 252, offset = 0) => {
   const response = await api.get('/games/', { params: { limit, offset } });
   return response.data;
 };
