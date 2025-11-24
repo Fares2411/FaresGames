@@ -13,7 +13,6 @@ import DreamGame from './components/DreamGame'
 import TopDirectors from './components/TopDirectors'
 import TopCollaborations from './components/TopCollaborations'
 import PlatformStats from './components/PlatformStats'
-
 function App() {
   return (
     <Router>
@@ -37,5 +36,4 @@ function App() {
     </Router>
   )
 }
-
 export default App

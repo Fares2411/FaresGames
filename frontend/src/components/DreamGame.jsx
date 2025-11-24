@@ -1,20 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { getDreamGame } from '../services/api';
-
 function DreamGame() {
   const [dreamGame, setDreamGame] = useState(null);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState({ type: '', text: '' });
-
   useEffect(() => {
     fetchDreamGame();
   }, []);
-
   const fetchDreamGame = async () => {
     setLoading(true);
     setMessage({ type: '', text: '' });
-
     try {
       const data = await getDreamGame();
       setDreamGame(data.dream_game);
@@ -32,7 +28,6 @@ function DreamGame() {
       setLoading(false);
     }
   };
-
   if (loading) {
     return (
       <div className="container">
@@ -45,7 +40,6 @@ function DreamGame() {
       </div>
     );
   }
-
   const InfoCard = ({ title, value, rating }) => (
     <div className="grid-item" style={{ textAlign: 'center' }}>
       <h3 style={{ 
@@ -72,7 +66,6 @@ function DreamGame() {
       )}
     </div>
   );
-
   return (
     <div className="container">
       <div className="card">
@@ -80,13 +73,11 @@ function DreamGame() {
         <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>
           Based on the highest-rated attributes from player ratings
         </p>
-
         {message.text && (
           <div className={`alert alert-${message.type}`}>
             {message.text}
           </div>
         )}
-
         {dreamGame && (
           <>
             {/* Core Game Design */}
@@ -105,7 +96,6 @@ function DreamGame() {
               <InfoCard title="Pacing" value={dreamGame.pacing} rating={stats.pacing_rating} />
               <InfoCard title="Interface" value={dreamGame.interface} rating={stats.interface_rating} />
             </div>
-
             {/* Story & Setting */}
             <h3 style={{ 
               color: 'var(--text-primary)', 
@@ -120,7 +110,6 @@ function DreamGame() {
               <InfoCard title="Setting" value={dreamGame.setting} rating={stats.setting_rating} />
               <InfoCard title="Narrative" value={dreamGame.narrative} rating={stats.narrative_rating} />
             </div>
-
             {/* Visual Presentation */}
             <h3 style={{ 
               color: 'var(--text-primary)', 
@@ -138,7 +127,6 @@ function DreamGame() {
                 <InfoCard title="Art Style" value={dreamGame.art_style} rating={stats.art_rating} />
               )}
             </div>
-
             {/* Platform & Distribution */}
             <h3 style={{ 
               color: 'var(--text-primary)', 
@@ -154,7 +142,6 @@ function DreamGame() {
               <InfoCard title="Business Model" value={dreamGame.business_model} rating={stats.business_model_rating} />
               <InfoCard title="Media Type" value={dreamGame.media_type} rating={stats.media_type_rating} />
             </div>
-
             {/* Development Team */}
             <h3 style={{ 
               color: 'var(--text-primary)', 
@@ -170,7 +157,6 @@ function DreamGame() {
               <InfoCard title="Publisher" value={dreamGame.publisher} rating={stats.publisher_rating} />
               <InfoCard title="Director" value={dreamGame.director} rating={stats.director_rating} />
             </div>
-
             {/* Input & Controls - UPDATED: Single field now */}
             {dreamGame.input_device_supported && (
               <>
@@ -192,7 +178,6 @@ function DreamGame() {
                 </div>
               </>
             )}
-
             {/* Additional Features (only if applicable) */}
             {(dreamGame.sport_type || dreamGame.vehicular_type || dreamGame.educational_focus || 
               dreamGame.misc_features || dreamGame.addon_type) && (
@@ -225,7 +210,6 @@ function DreamGame() {
                 </div>
               </>
             )}
-
             {/* Special Features & Rating */}
             <h3 style={{ 
               color: 'var(--text-primary)', 
@@ -246,7 +230,6 @@ function DreamGame() {
                 <InfoCard title="Special Edition" value={dreamGame.special_edition_features} rating={stats.special_edition_rating} />
               )}
             </div>
-
             {/* Summary */}
             <div className="stat-card" style={{ marginTop: '2rem', textAlign: 'center' }}>
               <h3 style={{ fontSize: '1.3rem', marginBottom: '1rem', color: 'white' }}>
@@ -264,7 +247,6 @@ function DreamGame() {
                 {' '}Rated <strong>{dreamGame.maturity_rating}</strong> by <strong>{dreamGame.maturity_organization}</strong>.
               </p>
             </div>
-
             <div style={{ marginTop: '2rem', textAlign: 'center' }}>
               <button onClick={fetchDreamGame} className="btn btn-primary">
                 Regenerate Dream Game
@@ -276,5 +258,4 @@ function DreamGame() {
     </div>
   );
 }
-
 export default DreamGame;

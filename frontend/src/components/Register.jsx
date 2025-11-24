@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { registerUser } from '../services/api';
-
 function Register() {
   const [formData, setFormData] = useState({
     email: '',
@@ -11,19 +10,16 @@ function Register() {
   });
   const [message, setMessage] = useState({ type: '', text: '' });
   const [loading, setLoading] = useState(false);
-
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setMessage({ type: '', text: '' });
-
     try {
       const userData = {
         email: formData.email,
@@ -32,13 +28,11 @@ function Register() {
         birthdate: formData.birthdate || null,
         country: formData.country || null,
       };
-
       const response = await registerUser(userData);
       setMessage({
         type: 'success',
         text: `✅ Successfully registered user: ${response.username}!`,
       });
-      
       setFormData({
         email: '',
         username: '',
@@ -46,9 +40,7 @@ function Register() {
         birthdate: '',
         country: '',
       });
-      
       localStorage.setItem('userEmail', response.email);
-      
     } catch (error) {
       setMessage({
         type: 'error',
@@ -58,18 +50,15 @@ function Register() {
       setLoading(false);
     }
   };
-
   return (
     <div className="container">
       <div className="card">
         <h2 className="card-title">👤 Register New User</h2>
-
         {message.text && (
           <div className={`alert alert-${message.type}`}>
             {message.text}
           </div>
         )}
-
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label className="form-label">Email Address *</label>
@@ -83,7 +72,6 @@ function Register() {
               placeholder="user@example.com"
             />
           </div>
-
           <div className="form-group">
             <label className="form-label">Username *</label>
             <input
@@ -98,7 +86,6 @@ function Register() {
               placeholder="Choose a username"
             />
           </div>
-
           <div className="form-group">
             <label className="form-label">Password *</label>
             <input
@@ -112,7 +99,6 @@ function Register() {
               placeholder="At least 6 characters"
             />
           </div>
-
           <div className="form-group">
             <label className="form-label">Birthdate</label>
             <input
@@ -123,7 +109,6 @@ function Register() {
               onChange={handleChange}
             />
           </div>
-
           <div className="form-group">
             <label className="form-label">Country</label>
             <input
@@ -135,7 +120,6 @@ function Register() {
               placeholder="e.g., Egypt"
             />
           </div>
-
           <button type="submit" className="btn btn-primary" disabled={loading}>
             {loading ? 'Registering...' : '✅ Register'}
           </button>
@@ -144,5 +128,4 @@ function Register() {
     </div>
   );
 }
-
 export default Register;

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getAllGames, healthCheck } from '../services/api';
-
 function Home() {
   const [stats, setStats] = useState({
     games_count: 0,
@@ -9,13 +8,11 @@ function Home() {
   });
   const [featuredGames, setFeaturedGames] = useState([]);
   const [loading, setLoading] = useState(true);
-
   useEffect(() => {
     const fetchData = async () => {
       try {
         const health = await healthCheck();
         setStats(health);
-
         const gamesData = await getAllGames(6, 0);
         setFeaturedGames(gamesData.games || []);
         setLoading(false);
@@ -24,14 +21,11 @@ function Home() {
         setLoading(false);
       }
     };
-
     fetchData();
   }, []);
-
   if (loading) {
     return <div className="loading">Loading FaresGames...</div>;
   }
-
   return (
     <div className="container">
       <div className="hero">
@@ -54,7 +48,6 @@ function Home() {
           </div>
         </div>
       </div>
-
       <div className="card">
         <h2 className="card-title">✨ Featured Games</h2>
         <div className="grid">
@@ -92,7 +85,6 @@ function Home() {
           ))}
         </div>
       </div>
-
       <div className="card">
         <h2 className="card-title">🚀 Quick Actions</h2>
         <div className="stats-grid">
@@ -114,7 +106,6 @@ function Home() {
           </Link>
         </div>
       </div>
-
       <div className="card">
         <h2 className="card-title">📊 Analytics & Insights</h2>
         <div className="grid">
@@ -136,7 +127,6 @@ function Home() {
           </Link>
         </div>
       </div>
-
       <footer style={{ textAlign: 'center', color: 'white', padding: '2rem', marginTop: '3rem' }}>
         <p>© 2025 FaresGames - Fundamentals of Database Systems Project</p>
         <p>Milestone 3 - Video Games Database Application</p>
@@ -144,5 +134,4 @@ function Home() {
     </div>
   );
 }
-
 export default Home;

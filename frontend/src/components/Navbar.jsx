@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
@@ -8,7 +7,6 @@ function Navbar() {
     const savedTheme = localStorage.getItem('theme');
     return savedTheme !== 'light';
   });
-
   useEffect(() => {
     if (isDarkMode) {
       document.body.classList.add('dark-mode');
@@ -18,22 +16,18 @@ function Navbar() {
       localStorage.setItem('theme', 'light');
     }
   }, [isDarkMode]);
-
   const toggleTheme = () => {
     setIsDarkMode(!isDarkMode);
   };
-
   const toggleDropdown = (dropdown) => {
     setActiveDropdown(activeDropdown === dropdown ? null : dropdown);
   };
-
   return (
     <nav className="navbar">
       <div className="navbar-content">
         <Link to="/" className="navbar-brand">
           🎮 Fares Games
         </Link>
-        
         {/* Desktop Navigation */}
         <ul className={`navbar-menu ${isOpen ? 'active' : ''}`}>
           <li>
@@ -41,13 +35,11 @@ function Navbar() {
               🏠 Home
             </Link>
           </li>
-          
           <li>
             <Link to="/register" className="navbar-link" onClick={() => setIsOpen(false)}>
               👤 Register
             </Link>
           </li>
-          
           {/* Ratings Dropdown */}
           <li 
             className={`navbar-dropdown ${activeDropdown === 'ratings' ? 'active' : ''}`}
@@ -73,7 +65,6 @@ function Navbar() {
               </li>
             </ul>
           </li>
-
           {/* Games Dropdown */}
           <li 
             className={`navbar-dropdown ${activeDropdown === 'games' ? 'active' : ''}`}
@@ -104,7 +95,6 @@ function Navbar() {
               </li>
             </ul>
           </li>
-
           {/* Analytics Dropdown */}
           <li 
             className={`navbar-dropdown ${activeDropdown === 'analytics' ? 'active' : ''}`}
@@ -146,7 +136,6 @@ function Navbar() {
             </ul>
           </li>
         </ul>
-
         {/* Right side icons */}
         <div className="navbar-actions">
           {/* Theme Toggle Button */}
@@ -162,7 +151,6 @@ function Navbar() {
               <span className="theme-icon">🌙</span>
             )}
           </button>
-
           {/* Hamburger menu for mobile */}
           <button 
             className="navbar-toggle"
@@ -176,5 +164,4 @@ function Navbar() {
     </nav>
   );
 }
-
 export default Navbar;

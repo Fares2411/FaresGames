@@ -1,21 +1,17 @@
 import React, { useState } from 'react';
 import { getTopCollaborations } from '../services/api';
-
 function TopCollaborations() {
   const [limit, setLimit] = useState(5);
   const [collaborations, setCollaborations] = useState([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setMessage({ type: '', text: '' });
-
     try {
       const data = await getTopCollaborations(limit);
       setCollaborations(data.collaborations || []);
-      
       if (data.collaborations && data.collaborations.length > 0) {
         setMessage({
           type: 'success',
@@ -36,7 +32,6 @@ function TopCollaborations() {
       setLoading(false);
     }
   };
-
   return (
     <div className="container">
       <div className="card">
@@ -44,13 +39,11 @@ function TopCollaborations() {
         <p style={{ color: '#666', marginBottom: '1.5rem' }}>
           Most successful partnerships between game directors and development companies
         </p>
-
         {message.text && (
           <div className={`alert alert-${message.type}`}>
             {message.text}
           </div>
         )}
-
         <form onSubmit={handleSubmit}>
           <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-end' }}>
             <div className="form-group" style={{ flex: 1 }}>
@@ -70,7 +63,6 @@ function TopCollaborations() {
             </button>
           </div>
         </form>
-
         {collaborations.length > 0 && (
           <div className="table-container">
             <table>
@@ -131,5 +123,4 @@ function TopCollaborations() {
     </div>
   );
 }
-
 export default TopCollaborations;

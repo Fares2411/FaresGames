@@ -74,7 +74,6 @@ def verify_password(email: str, password: str):
         WHERE EmailAddress = %s
     """
     user = execute_query(query, (email,), fetch_one=True)
-    
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     if user['Password'] != password:

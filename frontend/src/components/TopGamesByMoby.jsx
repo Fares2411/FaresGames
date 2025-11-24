@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { getTopGamesByMoby, getGenres, getSettings } from '../services/api';
-
 function TopGamesByMoby() {
   const [filters, setFilters] = useState({
     genre: '',
@@ -13,11 +12,9 @@ function TopGamesByMoby() {
   const [loading, setLoading] = useState(false);
   const [metadataLoading, setMetadataLoading] = useState(true);
   const [message, setMessage] = useState({ type: '', text: '' });
-
   useEffect(() => {
     fetchMetadata();
   }, []);
-
   const fetchMetadata = async () => {
     try {
       const [genresData, settingsData] = await Promise.all([
@@ -32,27 +29,22 @@ function TopGamesByMoby() {
       setMetadataLoading(false);
     }
   };
-
   const handleFilterChange = (e) => {
     setFilters({
       ...filters,
       [e.target.name]: e.target.value,
     });
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setMessage({ type: '', text: '' });
-
     try {
       const params = { limit: filters.limit };
       if (filters.genre) params.genre = filters.genre;
       if (filters.setting) params.setting = filters.setting;
-
       const data = await getTopGamesByMoby(params);
       setGames(data.games || []);
-      
       if (data.games && data.games.length > 0) {
         setMessage({
           type: 'success',
@@ -73,20 +65,16 @@ function TopGamesByMoby() {
       setLoading(false);
     }
   };
-
   return (
     <div className="container">
       <div className="card">
         <h2 className="card-title">Top Games by Moby Score</h2>
-
         {metadataLoading && <p>Loading filter options...</p>}
-
         {message.text && (
           <div className={`alert alert-${message.type}`}>
             {message.text}
           </div>
         )}
-
         <form onSubmit={handleSubmit}>
           <div className="filters">
             <div className="filter-item">
@@ -106,7 +94,6 @@ function TopGamesByMoby() {
                 ))}
               </select>
             </div>
-
             <div className="filter-item">
               <label className="form-label">Setting (Optional)</label>
               <select
@@ -124,7 +111,6 @@ function TopGamesByMoby() {
                 ))}
               </select>
             </div>
-
             <div className="filter-item">
               <label className="form-label">Limit</label>
               <select
@@ -139,12 +125,10 @@ function TopGamesByMoby() {
               </select>
             </div>
           </div>
-
           <button type="submit" className="btn btn-primary" disabled={loading || metadataLoading}>
             {loading ? 'Loading...' : 'Find Top Games'}
           </button>
         </form>
-
         {games.length > 0 && (
           <div className="grid" style={{ marginTop: '2rem' }}>
             {games.map((game, index) => (
@@ -196,5 +180,4 @@ function TopGamesByMoby() {
     </div>
   );
 }
-
 export default TopGamesByMoby;

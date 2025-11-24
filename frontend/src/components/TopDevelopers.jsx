@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { getTopDevelopers, getGenres } from '../services/api';
-
 function TopDevelopers() {
   const [filters, setFilters] = useState({
     genre: '',
@@ -11,11 +10,9 @@ function TopDevelopers() {
   const [loading, setLoading] = useState(false);
   const [genresLoading, setGenresLoading] = useState(true);
   const [message, setMessage] = useState({ type: '', text: '' });
-
   useEffect(() => {
     fetchGenres();
   }, []);
-
   const fetchGenres = async () => {
     try {
       const data = await getGenres();
@@ -26,23 +23,19 @@ function TopDevelopers() {
       setGenresLoading(false);
     }
   };
-
   const handleFilterChange = (e) => {
     setFilters({
       ...filters,
       [e.target.name]: e.target.value,
     });
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setMessage({ type: '', text: '' });
-
     try {
       const data = await getTopDevelopers(filters.genre || null, filters.limit);
       setDevelopers(data.developers || []);
-      
       if (data.developers && data.developers.length > 0) {
         setMessage({
           type: 'success',
@@ -63,7 +56,6 @@ function TopDevelopers() {
       setLoading(false);
     }
   };
-
   return (
     <div className="container">
       <div className="card">
@@ -71,15 +63,12 @@ function TopDevelopers() {
         <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>
           Best development companies ranked by critics rating
         </p>
-
         {genresLoading && <p>Loading genres...</p>}
-
         {message.text && (
           <div className={`alert alert-${message.type}`}>
             {message.text}
           </div>
         )}
-
         <form onSubmit={handleSubmit}>
           <div className="filters">
             <div className="filter-item">
@@ -99,7 +88,6 @@ function TopDevelopers() {
                 ))}
               </select>
             </div>
-
             <div className="filter-item">
               <label className="form-label">Limit</label>
               <select
@@ -114,12 +102,10 @@ function TopDevelopers() {
               </select>
             </div>
           </div>
-
           <button type="submit" className="btn btn-primary" disabled={loading || genresLoading}>
             {loading ? 'Loading...' : 'Find Top Developers'}
           </button>
         </form>
-
         {developers.length > 0 && (
           <div className="table-container">
             <table>
@@ -161,5 +147,4 @@ function TopDevelopers() {
     </div>
   );
 }
-
 export default TopDevelopers;

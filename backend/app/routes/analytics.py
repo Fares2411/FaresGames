@@ -1,9 +1,7 @@
 from fastapi import APIRouter, Query
 from app.database import execute_query
 from typing import Optional
-
 router = APIRouter()
-
 @router.get("/top-games")    
 def get_top_rated_games(
     genre: Optional[str] = None,
@@ -21,7 +19,6 @@ def get_top_rated_games(
     else:
         score_field = "g.overallPlayersScore"
         count_field = "g.overallPlayersCount"
-    
     query = f"""
         SELECT DISTINCT
             g.GameID,
@@ -31,33 +28,27 @@ def get_top_rated_games(
             {count_field} as RatingCount
         FROM Game g
     """
-    
     joins = []
     conditions = [f"{score_field} IS NOT NULL"]
     params = []
-    
     if genre:
         joins.append("""
             JOIN GameAttributes ga ON g.GameID = ga.GameID
         """)
         conditions.append("ga.AttributeType = 'Genre' AND ga.AttributeName = %s")
         params.append(genre)
-    
     if year:
         joins.append("""
             JOIN `Release` r ON g.GameID = r.GameID
         """)
         conditions.append("YEAR(r.ReleaseDate) = %s")
         params.append(year)
-    
     query += " ".join(joins)
     query += " WHERE " + " AND ".join(conditions)
     query += f" ORDER BY {score_field} DESC, {count_field} DESC"
     query += " LIMIT %s"
     params.append(limit)
-    
     games = execute_query(query, tuple(params))
-    
     return {
         "games": games,
         "rating_type": rating_type,
@@ -65,8 +56,6 @@ def get_top_rated_games(
         "year": year,
         "count": len(games)
     }
-
-
 @router.get("/top-games-by-moby")
 def get_top_games_by_moby_score(
     genre: Optional[str] = None,
@@ -86,41 +75,33 @@ def get_top_games_by_moby_score(
             g.overallMobyScore
         FROM Game g
     """
-    
     joins = []
     conditions = ["g.overallMobyScore IS NOT NULL"]
     params = []
-    
     if genre:
         joins.append("""
             JOIN GameAttributes ga_genre ON g.GameID = ga_genre.GameID
         """)
         conditions.append("ga_genre.AttributeType = 'Genre' AND ga_genre.AttributeName = %s")
         params.append(genre)
-    
     if setting:
         joins.append("""
             JOIN GameAttributes ga_setting ON g.GameID = ga_setting.GameID
         """)
         conditions.append("ga_setting.AttributeType = 'Setting' AND ga_setting.AttributeName = %s")
         params.append(setting)
-    
     query += " ".join(joins)
     query += " WHERE " + " AND ".join(conditions)
     query += " ORDER BY g.overallMobyScore DESC"
     query += " LIMIT %s"
     params.append(limit)
-    
     games = execute_query(query, tuple(params))
-    
     return {
         "games": games,
         "genre": genre,
         "setting": setting,
         "count": len(games)
     }
-
-
 @router.get("/top-developers")
 def get_top_developers(
     genre: Optional[str] = None,
@@ -166,16 +147,12 @@ def get_top_developers(
             LIMIT %s
         """#I used subquery just to ensure that there will be no duplicates as Release table can have multiple releases for the same game.
         params = (limit,)
-    
     developers = execute_query(query, params)
-    
     return {
         "developers": developers,
         "genre": genre,
         "count": len(developers)
     }
-
-
 @router.get("/dream-game")
 def get_dream_game():
     """
@@ -183,7 +160,6 @@ def get_dream_game():
     Analyzes ALL attribute types to find the optimal combination
     SQL: Multiple complex queries with GROUP BY and AVG aggregation
     """
-    
     def get_best_attribute(attribute_type):
         query = """
             SELECT 
@@ -199,7 +175,6 @@ def get_dream_game():
         """ 
         result = execute_query(query, (attribute_type,), fetch_one=True)
         return result if result else None
-    
     def get_best_platform_attribute(attribute_type):
         query = """
             SELECT 
@@ -215,7 +190,6 @@ def get_dream_game():
         """
         result = execute_query(query, (attribute_type,), fetch_one=True)
         return result if result else None
-    
     genre_result = get_best_attribute('Genre')
     gameplay_result = get_best_attribute('Gameplay')
     setting_result = get_best_attribute('Setting')
@@ -231,11 +205,9 @@ def get_dream_game():
     misc_result = get_best_attribute('Misc')
     addon_result = get_best_attribute('Add-on')
     special_edition_result = get_best_attribute('Special Edition')
-    
     business_model_result = get_best_platform_attribute('Business Model')
     media_type_result = get_best_platform_attribute('Media Type')
     input_devices_result = get_best_platform_attribute('Input Devices%')
-    
     platform_query = """
         SELECT 
             gp.PlatformName,
@@ -248,7 +220,6 @@ def get_dream_game():
         LIMIT 1
     """
     best_platform = execute_query(platform_query, fetch_one=True)
-    
     developer_query = """
         SELECT
             c.CompanyName AS Developer,
@@ -264,7 +235,6 @@ def get_dream_game():
         LIMIT 1
     """#I used subquery just to ensure that there will be no duplicates as Release table can have multiple releases for the same game.
     best_developer = execute_query(developer_query, fetch_one=True)
-    
     publisher_query = """
         SELECT
             c.CompanyName AS Publisher,
@@ -280,7 +250,6 @@ def get_dream_game():
         LIMIT 1
     """#I used subquery just to ensure that there will be no duplicates as Release table can have multiple releases for the same game.
     best_publisher = execute_query(publisher_query, fetch_one=True)
-    
     director_query = """
         SELECT 
             p.Name as DirectorName,
@@ -294,7 +263,6 @@ def get_dream_game():
         LIMIT 1
     """
     best_director = execute_query(director_query, fetch_one=True)
-    
     maturity_query = """
         SELECT 
             sub.Label,
@@ -315,7 +283,6 @@ def get_dream_game():
         LIMIT 1
     """#I used subquery just to ensure that there will be no duplicates as MaturityRating_GamePlatform table can have multiple releases for the same game.
     best_maturity = execute_query(maturity_query, fetch_one=True)
-    
     dream_game = {
         "genre": genre_result['AttributeName'] if genre_result else "N/A",
         "gameplay": gameplay_result['AttributeName'] if gameplay_result else "N/A",
@@ -342,7 +309,6 @@ def get_dream_game():
         "maturity_rating": best_maturity['Label'] if best_maturity else "N/A",
         "maturity_organization": best_maturity['MaturityRatingOrganization'] if best_maturity else "N/A"
     }
-    
     stats = {
         "genre_rating": float(genre_result['AvgRating']) if genre_result else 0,
         "gameplay_rating": float(gameplay_result['AvgRating']) if gameplay_result else 0,
@@ -368,7 +334,6 @@ def get_dream_game():
         "misc_rating": float(misc_result['AvgRating']) if misc_result else 0,
         "addon_rating": float(addon_result['AvgRating']) if addon_result else 0
     }
-    
     return {
         "dream_game": dream_game,
         "stats": stats,

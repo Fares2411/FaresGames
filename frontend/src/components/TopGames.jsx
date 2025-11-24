@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { getTopGames, getGenres, getReleaseYears } from '../services/api';
-
 function TopGames() {
   const [filters, setFilters] = useState({
     genre: '',
@@ -14,12 +13,10 @@ function TopGames() {
   const [loading, setLoading] = useState(false);
   const [metadataLoading, setMetadataLoading] = useState(true);
   const [message, setMessage] = useState({ type: '', text: '' });
-
   useEffect(() => {
     fetchMetadata();
     fetchTopGames();
   }, []);
-
   const fetchMetadata = async () => {
     try {
       const [genresData, yearsData] = await Promise.all([
@@ -34,23 +31,18 @@ function TopGames() {
       setMetadataLoading(false);
     }
   };
-
   const fetchTopGames = async () => {
     setLoading(true);
     setMessage({ type: '', text: '' });
-
     try {
       const params = {
         rating_type: filters.rating_type,
         limit: filters.limit,
       };
-
       if (filters.genre) params.genre = filters.genre;
       if (filters.year) params.year = parseInt(filters.year);
-
       const data = await getTopGames(params);
       setGames(data.games || []);
-      
       if (data.games && data.games.length > 0) {
         setMessage({
           type: 'success',
@@ -71,32 +63,26 @@ function TopGames() {
       setLoading(false);
     }
   };
-
   const handleFilterChange = (e) => {
     setFilters({
       ...filters,
       [e.target.name]: e.target.value,
     });
   };
-
   const handleSubmit = (e) => {
     e.preventDefault();
     fetchTopGames();
   };
-
   return (
     <div className="container">
       <div className="card">
         <h2 className="card-title">Top Rated Games</h2>
-
         {metadataLoading && <p>Loading filter options...</p>}
-
         {message.text && (
           <div className={`alert alert-${message.type}`}>
             {message.text}
           </div>
         )}
-
         <form onSubmit={handleSubmit}>
           <div className="filters">
             <div className="filter-item">
@@ -111,7 +97,6 @@ function TopGames() {
                 <option value="players">Players Score</option>
               </select>
             </div>
-
             <div className="filter-item">
               <label className="form-label">Genre (Optional)</label>
               <select
@@ -129,7 +114,6 @@ function TopGames() {
                 ))}
               </select>
             </div>
-
             <div className="filter-item">
               <label className="form-label">Year (Optional)</label>
               <select
@@ -147,7 +131,6 @@ function TopGames() {
                 ))}
               </select>
             </div>
-
             <div className="filter-item">
               <label className="form-label">Limit</label>
               <select
@@ -163,12 +146,10 @@ function TopGames() {
               </select>
             </div>
           </div>
-
           <button type="submit" className="btn btn-primary" disabled={loading || metadataLoading}>
             {loading ? 'Loading...' : 'Search Top Games'}
           </button>
         </form>
-
         {games.length > 0 && (
           <div className="grid" style={{ marginTop: '2rem' }}>
             {games.map((game, index) => (
@@ -222,5 +203,4 @@ function TopGames() {
     </div>
   );
 }
-
 export default TopGames;

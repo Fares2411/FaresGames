@@ -44,15 +44,11 @@ function AddRating() {
       setMetadataLoading(false);
     }
   };
-
-  // Fetch platforms for selected game
   const fetchGamePlatforms = async (gameId) => {
     setPlatformsLoading(true);
     try {
       const data = await getGamePlatforms(gameId);
       setAvailablePlatforms(data.platforms || []);
-      
-      // Reset platform selection if current selection not available
       if (formData.platform_name && !data.platforms.includes(formData.platform_name)) {
         setFormData(prev => ({ ...prev, platform_name: '' }));
       }
@@ -62,24 +58,21 @@ function AddRating() {
         type: 'warning', 
         text: 'Could not load platforms for this game. Please try again.' 
       });
-      setAvailablePlatforms(allPlatforms); // Fallback to all platforms
+      setAvailablePlatforms(allPlatforms); 
     } finally {
       setPlatformsLoading(false);
     }
   };
-
   const handleCredentialChange = (e) => {
     setCredentials({
       ...credentials,
       [e.target.name]: e.target.value,
     });
   };
-
   const handleLogin = async (e) => {
     e.preventDefault();
     setAuthLoading(true);
     setMessage({ type: '', text: '' });
-
     try {
       const response = await verifyPassword(credentials.email, credentials.password);
       setIsAuthenticated(true);
@@ -98,7 +91,6 @@ function AddRating() {
       setAuthLoading(false);
     }
   };
-
   const handleLogout = () => {
     setIsAuthenticated(false);
     setCredentials({ email: '', password: '' });
@@ -109,11 +101,9 @@ function AddRating() {
     setAvailablePlatforms(allPlatforms);
     setMessage({ type: '', text: '' });
   };
-
   const handleSearchChange = (e) => {
     const query = e.target.value;
     setSearchQuery(query);
-
     if (query.length >= 2) {
       const filtered = games.filter(game =>
         game.Title.toLowerCase().includes(query.toLowerCase())
@@ -123,21 +113,17 @@ function AddRating() {
       setFilteredGames([]);
     }
   };
-
   const selectGameFromSearch = (game) => {
     setSelectedGame(game);
     setFormData({
       ...formData,
       game_id: game.GameID,
-      platform_name: '', // Reset platform when game changes
+      platform_name: '', 
     });
     setSearchQuery(game.Title);
     setFilteredGames([]);
-    
-    // Fetch platforms for this game
     fetchGamePlatforms(game.GameID);
   };
-
   const handleGameDropdownChange = (e) => {
     const gameId = e.target.value;
     if (gameId) {
@@ -146,10 +132,8 @@ function AddRating() {
       setFormData({
         ...formData,
         game_id: parseInt(gameId),
-        platform_name: '', // Reset platform when game changes
+        platform_name: '', 
       });
-      
-      // Fetch platforms for this game
       fetchGamePlatforms(parseInt(gameId));
     } else {
       setSelectedGame(null);
@@ -158,22 +142,19 @@ function AddRating() {
         game_id: '',
         platform_name: '',
       });
-      setAvailablePlatforms(allPlatforms); // Reset to all platforms
+      setAvailablePlatforms(allPlatforms); 
     }
   };
-
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setMessage({ type: '', text: '' });
-
     try {
       const ratingData = {
         user_email: credentials.email,
@@ -181,20 +162,16 @@ function AddRating() {
         platform_name: formData.platform_name,
         rating: parseFloat(formData.rating),
       };
-
       const response = await addRating(ratingData);
       setMessage({
         type: 'success',
         text: `Successfully rated "${response.game_title}" on ${response.platform_name} - ${response.rating}/5.0`,
       });
-      
-      // Reset form but keep game selection
       setFormData({
         ...formData,
         platform_name: '',
         rating: 5.0,
       });
-      
     } catch (error) {
       setMessage({
         type: 'error',
@@ -204,8 +181,6 @@ function AddRating() {
       setLoading(false);
     }
   };
-
-  // Login form (unchanged)
   if (!isAuthenticated) {
     return (
       <div className="container">
@@ -214,13 +189,11 @@ function AddRating() {
           <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>
             Please login to add ratings to games
           </p>
-
           {message.text && (
             <div className={`alert alert-${message.type}`}>
               {message.text}
             </div>
           )}
-
           <form onSubmit={handleLogin}>
             <div className="form-group">
               <label className="form-label">Email Address *</label>
@@ -235,7 +208,6 @@ function AddRating() {
                 autoComplete="email"
               />
             </div>
-
             <div className="form-group">
               <label className="form-label">Password *</label>
               <input
@@ -249,7 +221,6 @@ function AddRating() {
                 autoComplete="current-password"
               />
             </div>
-
             <button
               type="submit"
               className="btn btn-primary"
@@ -262,8 +233,6 @@ function AddRating() {
       </div>
     );
   }
-
-  // Rating form
   return (
     <div className="container">
       <div className="card">
@@ -282,15 +251,12 @@ function AddRating() {
             </button>
           </div>
         </div>
-
         {metadataLoading && <p>Loading games and platforms...</p>}
-
         {message.text && (
           <div className={`alert alert-${message.type}`}>
             {message.text}
           </div>
         )}
-
         <form onSubmit={handleSubmit}>
           {/* Game Selection */}
           <div className="form-group">
@@ -312,7 +278,6 @@ function AddRating() {
                 {useDropdown ? 'Switch to Search' : 'Switch to Dropdown'}
               </button>
             </div>
-
             {useDropdown ? (
               <>
                 <select
@@ -379,7 +344,6 @@ function AddRating() {
               </>
             )}
           </div>
-
           {/* Platform Selection - Now Dynamic! */}
           <div className="form-group">
             <label className="form-label">
@@ -413,7 +377,6 @@ function AddRating() {
               ))}
             </select>
           </div>
-
           {/* Rating Slider */}
           <div className="form-group">
             <label className="form-label">
@@ -458,5 +421,4 @@ function AddRating() {
     </div>
   );
 }
-
 export default AddRating;

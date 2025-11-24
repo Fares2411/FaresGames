@@ -1,21 +1,17 @@
 import React, { useState } from 'react';
 import { getTopDirectors } from '../services/api';
-
 function TopDirectors() {
   const [limit, setLimit] = useState(5);
   const [directors, setDirectors] = useState([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setMessage({ type: '', text: '' });
-
     try {
       const data = await getTopDirectors(limit);
       setDirectors(data.directors || []);
-      
       if (data.directors && data.directors.length > 0) {
         setMessage({
           type: 'success',
@@ -36,7 +32,6 @@ function TopDirectors() {
       setLoading(false);
     }
   };
-
   return (
     <div className="container">
       <div className="card">
@@ -44,13 +39,11 @@ function TopDirectors() {
         <p style={{ color: '#666', marginBottom: '1.5rem' }}>
           Best game directors ranked by the volume of games they've directed
         </p>
-
         {message.text && (
           <div className={`alert alert-${message.type}`}>
             {message.text}
           </div>
         )}
-
         <form onSubmit={handleSubmit}>
           <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-end' }}>
             <div className="form-group" style={{ flex: 1 }}>
@@ -70,7 +63,6 @@ function TopDirectors() {
             </button>
           </div>
         </form>
-
         {directors.length > 0 && (
           <div className="table-container">
             <table>
@@ -113,5 +105,4 @@ function TopDirectors() {
     </div>
   );
 }
-
 export default TopDirectors;

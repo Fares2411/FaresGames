@@ -1,23 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { getPlatformStats } from '../services/api';
-
 function PlatformStats() {
   const [platforms, setPlatforms] = useState([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState({ type: '', text: '' });
-
   useEffect(() => {
     fetchPlatformStats();
   }, []);
-
   const fetchPlatformStats = async () => {
     setLoading(true);
     setMessage({ type: '', text: '' });
-
     try {
       const data = await getPlatformStats();
       setPlatforms(data.platforms || []);
-      
       if (data.platforms && data.platforms.length > 0) {
         setMessage({
           type: 'success',
@@ -38,11 +33,9 @@ function PlatformStats() {
       setLoading(false);
     }
   };
-
   if (loading) {
     return <div className="loading">Loading platform statistics...</div>;
   }
-
   return (
     <div className="container">
       <div className="card">
@@ -50,13 +43,11 @@ function PlatformStats() {
         <p style={{ color: '#666', marginBottom: '1.5rem' }}>
           Number of games available on each platform and their average ratings
         </p>
-
         {message.text && (
           <div className={`alert alert-${message.type}`}>
             {message.text}
           </div>
         )}
-
         {platforms.length > 0 && (
           <>
             <div className="table-container">
@@ -111,7 +102,6 @@ function PlatformStats() {
                 </tbody>
               </table>
             </div>
-
             <div className="stats-grid" style={{ marginTop: '2rem' }}>
               <div className="stat-card">
                 <div className="stat-value">{platforms.length}</div>
@@ -130,7 +120,6 @@ function PlatformStats() {
                 <div className="stat-label">Most Games</div>
               </div>
             </div>
-
             <div style={{ marginTop: '2rem', textAlign: 'center' }}>
               <button onClick={fetchPlatformStats} className="btn btn-secondary">
                 🔄 Refresh Data
@@ -142,5 +131,4 @@ function PlatformStats() {
     </div>
   );
 }
-
 export default PlatformStats;

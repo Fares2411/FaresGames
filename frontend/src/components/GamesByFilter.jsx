@@ -7,7 +7,6 @@ import {
   getPublishers,
   getReleaseYears 
 } from '../services/api';
-
 function GamesByFilter() {
   const [filters, setFilters] = useState({
     genre: '',
@@ -18,22 +17,18 @@ function GamesByFilter() {
     sort_by: 'moby_score',
     limit: '',
   });
-  
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
-  
   const [genres, setGenres] = useState([]);
   const [platforms, setPlatforms] = useState([]);
   const [developers, setDevelopers] = useState([]);
   const [publishers, setPublishers] = useState([]);
   const [years, setYears] = useState([]);
   const [metadataLoading, setMetadataLoading] = useState(true);
-
   useEffect(() => {
     fetchAllMetadata();
   }, []);
-
   const fetchAllMetadata = async () => {
     setMetadataLoading(true);
     try {
@@ -44,7 +39,6 @@ function GamesByFilter() {
         getPublishers(),
         getReleaseYears()
       ]);
-
       setGenres(genresData.genres || []);
       setPlatforms(platformsData.platforms || []);
       setDevelopers(developersData.developers || []);
@@ -57,19 +51,16 @@ function GamesByFilter() {
       setMetadataLoading(false);
     }
   };
-
   const handleFilterChange = (e) => {
     setFilters({
       ...filters,
       [e.target.name]: e.target.value,
     });
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setMessage({ type: '', text: '' });
-
     try {
       const params = {};
       if (filters.genre) params.genre = filters.genre;
@@ -79,10 +70,8 @@ function GamesByFilter() {
       if (filters.year) params.year = parseInt(filters.year);
       if (filters.sort_by) params.sort_by = filters.sort_by;
       if (filters.limit) params.limit = parseInt(filters.limit);
-
       const data = await getGamesByFilter(params);
       setGames(data.games || []);
-      
       if (data.games && data.games.length > 0) {
         setMessage({
           type: 'success',
@@ -103,20 +92,16 @@ function GamesByFilter() {
       setLoading(false);
     }
   };
-
   return (
     <div className="container">
       <div className="card">
         <h2 className="card-title">Browse Games by Filter</h2>
-
         {metadataLoading && <p>Loading filter options...</p>}
-
         {message.text && (
           <div className={`alert alert-${message.type}`}>
             {message.text}
           </div>
         )}
-
         <form onSubmit={handleSubmit}>
           <div className="filters">
             <div className="filter-item">
@@ -136,7 +121,6 @@ function GamesByFilter() {
                 ))}
               </select>
             </div>
-
             <div className="filter-item">
               <label className="form-label">Platform</label>
               <select
@@ -154,7 +138,6 @@ function GamesByFilter() {
                 ))}
               </select>
             </div>
-
             <div className="filter-item">
               <label className="form-label">Publisher</label>
               <select
@@ -172,7 +155,6 @@ function GamesByFilter() {
                 ))}
               </select>
             </div>
-
             <div className="filter-item">
               <label className="form-label">Developer</label>
               <select
@@ -190,7 +172,6 @@ function GamesByFilter() {
                 ))}
               </select>
             </div>
-
             <div className="filter-item">
               <label className="form-label">Year</label>
               <select
@@ -208,7 +189,6 @@ function GamesByFilter() {
                 ))}
               </select>
             </div>
-
             <div className="filter-item">
               <label className="form-label">Sort By</label>
               <select
@@ -223,7 +203,6 @@ function GamesByFilter() {
                 <option value="players_score">Players Score</option>
               </select>
             </div>
-
             <div className="filter-item">
               <label className="form-label">Limit Results</label>
               <select
@@ -241,12 +220,10 @@ function GamesByFilter() {
               </select>
             </div>
           </div>
-
           <button type="submit" className="btn btn-primary" disabled={loading || metadataLoading}>
             {loading ? 'Searching...' : 'Search Games'}
           </button>
         </form>
-
         {games.length > 0 && (
           <div className="grid" style={{ marginTop: '2rem' }}>
             {games.map((game) => (
@@ -287,5 +264,4 @@ function GamesByFilter() {
     </div>
   );
 }
-
 export default GamesByFilter;
